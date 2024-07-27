@@ -116,7 +116,7 @@ public:
             for(int k = 0; k < objetos.size(); k++)
             {
                 double result = ray_color(r, *objetos[k]);
-                if(result > 0.0 and result < t)
+                if(result > 0.0 && result < t)
                 {
                     t = result;
                     ind = k;
@@ -210,7 +210,7 @@ public:
         std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; j++) {
-            std::clog << "\rLinhas restantes: " << (image_height - j) << ' ' << std::flush;
+            //std::clog << "\rLinhas restantes: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++) {
                 auto pixel_center = pixel00_loc + pixel_delta_u * i + pixel_delta_v * j;
                 auto ray_direction = pixel_center - camera_center;

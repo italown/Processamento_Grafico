@@ -56,13 +56,28 @@ void cisalhamento(vector<object*>& triangulos, double shXY, double shXZ, double 
     }
 }
 
+#include <stdio.h>
+#include <direct.h>
+#define Define_CurrentDir _getcwd
 
-int main() {
+
+int main(int argc, char* argv[]) {
     ios::sync_with_stdio(false); cin.tie(NULL);
+
+    char LOCAL_DIR[FILENAME_MAX];
+
+    if (!Define_CurrentDir(LOCAL_DIR, sizeof(LOCAL_DIR)))
+        {
+        return errno;
+        }
 
     colormap cmap;
 
-    objReader reader("./input/mamaco.obj", cmap);
+    string dir = LOCAL_DIR;
+
+    string filename = (argv[1] ? argv[1] : "input/cubo.obj");
+
+    objReader reader(LOCAL_DIR, filename, cmap);
 
 
     point pos_cam(6,2,0);
@@ -92,11 +107,11 @@ int main() {
 
     rotacao(triangulos, 50.0, 'y');
 
-    sphere esfera1 = sphere(origem_esfera2, 3, vetor(0,0,0), kd,k_esfera,ke,k_esfera, ns, 1.0, 0.0);
-    triangulos.push_back(&esfera1);
-    sphere esfera2 = sphere(origem_esfera2, 0.5, cor, kd,ks,ke,ka, ns, 0.0, 0.0);
-    triangulos.push_back(&esfera2);
-    sphere esfera3 = sphere(origem_esfera1,0.5, vetor(0,0,0.5), kd,ks,ke,ka, ns, 0.0, 1.0);
+    // sphere esfera1 = sphere(origem_esfera2, 3, vetor(0,0,0), kd,k_esfera,ke,k_esfera, ns, 1.0, 0.0);
+    // triangulos.push_back(&esfera1);
+    // sphere esfera2 = sphere(origem_esfera2, 0.5, cor, kd,ks,ke,ka, ns, 0.0, 0.0);
+    // triangulos.push_back(&esfera2);
+    // sphere esfera3 = sphere(origem_esfera1,0.5, vetor(0,0,0.5), kd,ks,ke,ka, ns, 0.0, 1.0);
     // triangulos.push_back(&esfera3);
     // sphere esfera4 = sphere(origem_esfera2, 0.5, cor3, kd,ks,ke,ka, ns, 0.0, 0.0);
     // triangulos.push_back(&esfera4);
@@ -112,7 +127,7 @@ int main() {
     vetor ka_plano = vetor(0,0,0);
     vetor cor_plano(0.,0.5,0);
     plane plano = plane(origem_plano, vetor(0, 1, 0), cor_plano, kd,ks,ke,ka_plano, ns, 0.0, 1.0);
-    triangulos.push_back(&plano);
+    // triangulos.push_back(&plano);
 
     vector<light> lts;
     point lt_pos(7, 3, 2);

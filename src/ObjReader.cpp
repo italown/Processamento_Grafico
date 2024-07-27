@@ -34,7 +34,7 @@ public:
         return this->triangles;
     }
 
-    objReader(std::string filename, colormap& cmap) : cmap(cmap) {
+    objReader(std::string LOCAL_DIR, std::string filename, colormap& cmap) : cmap(cmap) {
 
         // Abre o arquivo
         file.open(filename);
@@ -52,7 +52,10 @@ public:
 
             if (prefix == "mtllib") {
                 iss >> filename_mtl;
-                cmap = colormap("./input/" + filename_mtl);
+                //std::string filename_mtl_path = LOCAL_DIR + "\\input\\" + filename_mtl;
+                std::string filename_mtl_path = filename.replace(filename.length() - 3, 3, "mtl");
+                clog << filename_mtl_path << "\n";
+                cmap = colormap(filename_mtl_path);
             } else if (prefix == "usemtl") {
                 iss >> colorname;
                 curMaterial = cmap.getMaterialProperties(colorname);
