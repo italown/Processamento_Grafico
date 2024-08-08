@@ -10,7 +10,7 @@ bl_info = {
     "category": "3D View",
 }
 
-import bpy
+import bpy # type: ignore
 import os
 import tempfile
 import subprocess

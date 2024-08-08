@@ -57,7 +57,6 @@ public:
                             (A.getZ() + B.getZ() + C.getZ()) / 3);
         this->normal = (B-C).produto_vetorial(C-A).normalizar();
     }
-
     // Construtor sem cor
     triangle(vetor& normal, point& A, point B, point C)
         : object(vetor(1, 1, 1)), normal(normal), A(A), B(B), C(C)
@@ -70,7 +69,6 @@ public:
 
     double intersect(ray& ray) override {
         double t;
-
         vetor plano_orig = vetor(this->getPonto().getX(),
                                 this->getPonto().getY(),
                                 this->getPonto().getZ());
@@ -105,6 +103,13 @@ public:
 
         else
             return INFINITY;
+    }
+
+    void print() {
+        clog << "Triangle: " <<endl;
+        clog << "A: " << A.getX() << " " << A.getY() << " " << A.getZ() << endl;
+        clog << "B: " << B.getX() << " " << B.getY() << " " << B.getZ() << endl;
+        clog << "C: " << C.getX() << " " << C.getY() << " " << C.getZ() << endl;
     }
 
     void rotacao(double angle, char eixo, point centroide) override {
@@ -186,13 +191,13 @@ public:
     vetor getNormal() override { return this->normal; }
 
     // Getters para propriedades do material
-        vetor getKd() override {return kd;}
-        vetor getKs() override {return ks;}
-        vetor getKe() override {return ke;}
-        vetor getKa() override {return ka;}
-        double getNi() override {return ni;}
-        double getD() override {return d;}
-        double getShininess() override { return ns; }
+    vetor getKd() override {return kd;}
+    vetor getKs() override {return ks;}
+    vetor getKe() override {return ke;}
+    vetor getKa() override {return ka;}
+    double getNi() override {return ni;}
+    double getD() override {return d;}
+    double getShininess() override { return ns; }
 
 };
 

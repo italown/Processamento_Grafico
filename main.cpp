@@ -13,6 +13,7 @@
 #include "src/ObjReader.cpp"
 #include "src/Mesh.cpp"
 #include "src/Colormap.cpp"
+#include "src/Bezier.cpp"
 
 using namespace std;
 
@@ -62,7 +63,7 @@ void cisalhamento(vector<object*>& triangulos, double shXY, double shXZ, double 
 
 
 int main(int argc, char* argv[]) {
-    ios::sync_with_stdio(false); cin.tie(NULL);
+    ios::sync_with_stdio(false); cin.tie(NULL);  
 
     char LOCAL_DIR[FILENAME_MAX];
 
@@ -79,16 +80,15 @@ int main(int argc, char* argv[]) {
 
     objReader reader(LOCAL_DIR, filename, cmap);
 
-
-    point pos_cam(6,2,0);
-    point target_cam(0,0,0);
+    point pos_cam(0,3,6);
+    point target_cam(0,2,0);
     vetor up_cam(0,1,0);
 
-    camera cam(400, pos_cam, target_cam, up_cam, 16.0/9.0, 1.0);
+    camera cam(400, pos_cam, target_cam, up_cam, 16.0/9.0, 2);
 
     // point origem_esfera1(1,0,2);
     point origem_esfera1(4,1,2);    
-    point origem_esfera2(0,0.2,0);    
+    point origem_esfera2(0,0,0);    
     point origem_esfera3(1.5,-0.5,-2);
 
     // vetor normal_plano(0,1,0);
@@ -96,19 +96,25 @@ int main(int argc, char* argv[]) {
     vetor cor(1,0,0);
     vetor cor2(0.4,0.4,0.4);
     vetor cor3(0,0,0.5);
-    vetor kd = vetor(0.5, 0, 0);
-    vetor ks = vetor(1, 0, 0);
+    vetor kd = vetor(1, 1, 0);
+    vetor ks = vetor(0, 0, 0);
     vetor ke = vetor(0.000000, 0.000000, 0.000000);
     vetor ka = vetor(0.6, 1, 1);
     double ns = 10.000000;
     vetor k_esfera = vetor(0,0,0);
-    //vector <object*> triangulos;
-    vector<object*> triangulos = reader.getTriangles();
+    // vector<object*> triangulos = reader.getTriangles();
+    std::vector<std::vector<vetor>> controlPoints = {
+        { vetor(0, 0, 0), vetor(1, 0, 1), vetor(2, 0, 1), vetor(3, 0, 0)},
+        { vetor(0, 2, 1), vetor(1, 1, 2), vetor(2, 1, 2), vetor(3, 2, 1)},
+        { vetor(0, 2, -1), vetor(1, 2, 0), vetor(2, 2, 2), vetor(3, 2, -1)}
+    };
+    Bezier* bezier_test = new Bezier(controlPoints, vetor(1,0,0), kd, k_esfera, ke, k_esfera, ns, 1.0, 0.0);
+    
+    std::vector <object*> triangulos = bezier_test->triangulate(0.01);
+    //rotacao(triangulos, 50.0, 'y');
 
-    rotacao(triangulos, 50.0, 'y');
-
-    // sphere esfera1 = sphere(origem_esfera2, 3, vetor(0,0,0), kd,k_esfera,ke,k_esfera, ns, 1.0, 0.0);
-    // triangulos.push_back(&esfera1);
+    sphere esfera1 = sphere(origem_esfera2, 3, vetor(1,0,0), kd,k_esfera,ke,k_esfera, ns, 1.0, 0.0);
+    //triangulos.push_back(&esfera1);
     // sphere esfera2 = sphere(origem_esfera2, 0.5, cor, kd,ks,ke,ka, ns, 0.0, 0.0);
     // triangulos.push_back(&esfera2);
     // sphere esfera3 = sphere(origem_esfera1,0.5, vetor(0,0,0.5), kd,ks,ke,ka, ns, 0.0, 1.0);
@@ -126,19 +132,19 @@ int main(int argc, char* argv[]) {
     point origem_plano(0,-4,0);
     vetor ka_plano = vetor(0,0,0);
     vetor cor_plano(0.,0.5,0);
-    plane plano = plane(origem_plano, vetor(0, 1, 0), cor_plano, kd,ks,ke,ka_plano, ns, 0.0, 1.0);
-    // triangulos.push_back(&plano);
+    plane plano = plane(origem_plano, vetor(0, -2, 0), cor_plano, kd,ks,ke,ka_plano, ns, 0.0, 1.0);
+    //triangulos.push_back(&plano);
 
     vector<light> lts;
     point lt_pos(7, 3, 2);
-    point lt_pos2(0, 100, -100);
+    point lt_pos2(3, -10, 0);
     vetor lt_color(0.4,0.4,0.4);
     light lt(lt_pos,lt_color);
     light lt2(lt_pos2, lt_color);
-    lts.push_back(lt);
-    // lts.push_back(lt2);
-
-    vetor ambiente_color(0.1,0.1,0.1);
+    //lts.push_back(lt);
+    lts.push_back(lt2);
+    std::clog << "Tamanho: " << triangulos.size() << endl;
+    vetor ambiente_color(0.1,0.1,0.1);    
     cam.render(triangulos, lts, ambiente_color);
 
     return 0;

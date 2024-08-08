@@ -210,14 +210,12 @@ public:
         std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; j++) {
-            //std::clog << "\rLinhas restantes: " << (image_height - j) << ' ' << std::flush;
+            std::clog << "\rLinhas restantes: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++) {
                 auto pixel_center = pixel00_loc + pixel_delta_u * i + pixel_delta_v * j;
                 auto ray_direction = pixel_center - camera_center;
                 ray_direction = ray_direction.normalizar();
                 ray r(camera_center, ray_direction);
-                
-                // tuple<int, double, vetor> pixel_info(0, 0, vetor(0, 0, 0));
 
                 vetor final_color = phong_shading(r,objetos,lights,ambient_light,0);
                 final_color.write_color(cout);

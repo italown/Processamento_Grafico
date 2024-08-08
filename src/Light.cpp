@@ -2,7 +2,6 @@
 #define LIGHTHEADER
 #include "Point.cpp"
 
-
 class light{
     private:
         point position;
